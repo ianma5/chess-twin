@@ -22,7 +22,6 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     os.makedirs("uploads", exist_ok=True)
     session_id = str(uuid.uuid4())
     pgn_filename = f"{session_id}_{file.filename}"
-    # open file and parse the moves, store in json for later
     pgn_path = os.path.join("uploads", file.filename)
     with open(pgn_path, "wb") as f:
         f.write(await file.read())
@@ -49,19 +48,6 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     )
 
 
-    # run algorithm, and then send returned results
-    # similar_pgn_file = logic.find_game(pgn_path)
-
-    # return templates.TemplateResponse(
-    #     "result.html",
-    #     {
-    #         "request": request,
-    #         "message": "Found similar game!",
-    #         "pgn_url": f"/{similar_pgn_file}"  # file
-    #     }
-    # )
-
-
 @app.get("/options", response_class=HTMLResponse)
 async def options(request: Request, session_id: str):
     return templates.TemplateResponse(
@@ -84,7 +70,6 @@ async def compare(
     with open(session_path, "r") as f:
         session_data = json.load(f)
 
-    # Update options
     session_data["options"] = {
         "compare_type": compare_type,
         "winner": winner,

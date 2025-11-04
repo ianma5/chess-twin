@@ -1,0 +1,9 @@
+{
+    "session_id": "159f34fa-3b09-4eae-a8fa-a06e67bf012e",
+    "pgn_path": "uploads\\DannyGleeson_vs_olezha234_2022.06.07.pgn",
+    "options": {
+        "compare_type": "moves",
+        "winner": "any",
+        "search_method": "rabin-karp"
+    }
+}
