@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 import logic
 
 app = FastAPI()
+os.makedirs("uploads", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 templates = Jinja2Templates(directory="pages")
 
@@ -23,7 +24,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     with open(pgn_path, "wb") as f:
         f.write(await file.read())
 
-    with open(pgn_path) as f:
+    with open(pgn_path, encoding="utf-8", errors="ignore") as f:
         game = chess.pgn.read_game(f)
 
     if not game:
@@ -42,5 +43,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         }
     )
 
-
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
 
