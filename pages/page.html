@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Chess Twin</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #2e2e2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #ffffff;
+    }
+    .card {
+      background: #2b2b2b;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      width: 400px;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    input[type="file"] {
+      color: #f1f1f1;
+      background: #3a3a3a;
+      border: 1px solid #777;
+      border-radius: 4px;
+      padding: 0.5rem;
+      width: 80%;
+      text-align: center;
+    }
+    button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #808080;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #9b9b9b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Chess Twin</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".pgn" required>
+      <button type="submit">Find Game</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Chess Twin</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #2e2e2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #ffffff;
+    }
+    .card {
+      background: #2b2b2b;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      width: 400px;
+      text-align: center;
+    }
+    a.download-link {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #808080;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    a.download-link:hover {
+      background: #9b9b9b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Chess Twin</h1>
+    <p>{{ message }}</p>
+    <a href="{{ pgn_url }}" download class="download-link">Download Similar Game</a>
+  </div>
+</body>
+</html>
