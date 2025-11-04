@@ -1,6 +1,6 @@
 from data_loader import load_pgn_database
 games = load_pgn_database("lichess_db_standard_rated_2013-01.pgn.zst", max_games=1000)
-print("Example:", games[0][:100])
+#print("Example:", games[0][:100])
 
 def rabin_karp_search(pattern, text, base=256, mod=101):
     n = len(text)
