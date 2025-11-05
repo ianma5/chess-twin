@@ -3,7 +3,6 @@ games = load_pgn_database("lichess_db_standard_rated_2013-01.pgn.zst", max_games
 
 
 def rabin_karp_search(pattern, text, base=256, mod=101):
-    """Return True if pattern appears in text."""
     n = len(text)
     m = len(pattern)
     if m > n:
@@ -28,7 +27,6 @@ def rabin_karp_search(pattern, text, base=256, mod=101):
 
 
 def compare_moves_individual(input_game: str, database_game: str) -> int:
-    """Count how many moves from input_game appear anywhere in database_game."""
     input_moves = input_game.split()
     data_text = database_game
     score = 0
@@ -41,7 +39,6 @@ def compare_moves_individual(input_game: str, database_game: str) -> int:
 
 
 def longest_common_sequence(input_game: str, database_game: str) -> int:
-    """Find the longest sequence of consecutive moves shared by both games."""
     input_moves = input_game.split()
     db_moves = database_game.split()
 
@@ -63,7 +60,6 @@ def longest_common_sequence(input_game: str, database_game: str) -> int:
 
 
 def compare_games(input_game: str, database_game: str, mode="moves") -> int:
-    """Compare two games either by individual move matches or sequence length."""
     if mode == "moves":
         return compare_moves_individual(input_game, database_game)
     elif mode == "sequence":
@@ -73,7 +69,6 @@ def compare_games(input_game: str, database_game: str, mode="moves") -> int:
 
 
 def find_most_similar_game(input_game: str, database_games, mode="moves"):
-    """Return the most similar game and its similarity score."""
     best_score = -1
     best_game = None
 
