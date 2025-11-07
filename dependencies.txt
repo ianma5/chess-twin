@@ -3,3 +3,4 @@ uvicorn
 python-chess
 python-multipart
 jinja2
+zstandard

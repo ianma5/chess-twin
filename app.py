@@ -5,13 +5,19 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Form
-import rabin_karp
-import logic
+from fastapi.responses import RedirectResponse
+
+from data_loader import load_pgn_database
+from rabin_karp import find_most_similar_game
+
+database_games = load_pgn_database("lichess_db_standard_rated_2013-01.pgn.zst", max_games=1000)
+
 
 app = FastAPI()
 os.makedirs("uploads", exist_ok=True)
 os.makedirs("sessions", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/img", StaticFiles(directory="img"), name="img")
 templates = Jinja2Templates(directory="pages")
 
 @app.get("/", response_class=HTMLResponse)
@@ -42,7 +48,6 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     with open(f"sessions/{session_id}.json", "w") as session_file:
         json.dump(session_data, session_file, indent=4)
 
-    from fastapi.responses import RedirectResponse
     return RedirectResponse(
         url=f"/options?session_id={session_id}",  
         status_code=303
@@ -71,12 +76,16 @@ async def compare(
     with open(session_path, "r") as f:
         session_data = json.load(f)
 
-    session_data["options"] = {
-        "compare_type": compare_type,
-        "winner": winner,
-        "search_method": search_method
-    }
-    
+    with open(session_data["pgn_path"], "r", encoding="utf-8", errors="ignore") as f:
+        input_game = f.read()
+
+    similar_game, score = find_most_similar_game(input_game, database_games, mode="moves")
+
+    similar_game_pgn = f"uploads/{session_id}_similar.pgn"
+    with open(similar_game_pgn, "w", encoding="utf-8") as f:
+        f.write(similar_game)
+    session_data["similar_game_pgn"] = similar_game_pgn
+
     with open(session_path, "w") as f:
         json.dump(session_data, f, indent=4)
 
@@ -87,7 +96,9 @@ async def compare(
             "compare_type": compare_type,
             "winner": winner,
             "search_method": search_method,
-            "pgn_url": session_data["pgn_path"],
+            "pgn_url": session_data["similar_game_pgn"],
+            "pgn_content": similar_game,
+            "similarity_score": score,
             "message": "Options saved successfully!"
         }
     )
