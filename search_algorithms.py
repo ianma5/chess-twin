@@ -1,6 +1,8 @@
 from data_loader import load_pgn_database
 import re
 import time
+import chess.pgn
+import io
 
 
 # first search algorithm, rabin karp search
@@ -73,19 +75,51 @@ def compare_games(input_game: str, database_game: str, mode="moves", method="rab
         raise ValueError("Mode must be 'moves' or 'sequence'")
 
 
-def find_most_similar_game(input_game: str, database_games, mode="moves", method="rabin-karp"):
+def find_most_similar_game(input_game: str, database_games, mode="moves", method="rabin-karp", winner="any"):
     start = time.perf_counter()
-    
     best_score = -1
     best_game = None
+    valid_game_found = False 
 
     for idx, game in enumerate(database_games):
-        score = compare_games(input_game, game, mode, method)
-        if score > best_score:
-            best_score = score
-            best_game = game
+        if not game.strip():
+            continue
 
-    elapsed = time.perf_counter() - start  
+        try:
+            pgn_stream = io.StringIO(game)
+            parsed_game = chess.pgn.read_game(pgn_stream)
+
+            if not parsed_game:
+                continue
+
+            moves = list(parsed_game.mainline_moves())
+            if not moves:
+                continue
+
+            winner_color = "white" if len(moves) % 2 != 0 else "black"
+
+            if winner != "any" and winner_color != winner:
+                continue
+
+            valid_game_found = True
+            score = compare_games(input_game, game, mode)
+
+            if score > best_score:
+                best_score = score
+                best_game = game
+
+        except Exception as e:
+            continue  
+
+    if not valid_game_found:
+        print(f"No games matched the winner '{winner}'. Returning best overall game instead.")
+        for idx, game in enumerate(database_games):
+            score = compare_games(input_game, game, mode)
+            if score > best_score:
+                best_score = score
+                best_game = game
+
+    elapsed = time.perf_counter() - start
     print(f"{method.upper()} search completed in {elapsed:.2f} seconds")
 
     return best_game, best_score
