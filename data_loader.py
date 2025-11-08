@@ -6,7 +6,7 @@ import zstandard as zstd
 
 CACHE_FILE = "chess_cache.json"
 
-def load_pgn_database(file_path, max_games=1000):
+def load_pgn_database(file_path, max_games=100000):
     if os.path.exists(CACHE_FILE):
         with open(CACHE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
