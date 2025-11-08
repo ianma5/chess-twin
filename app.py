@@ -8,9 +8,9 @@ from fastapi import Form
 from fastapi.responses import RedirectResponse
 
 from data_loader import load_pgn_database
-from rabin_karp import find_most_similar_game
+from search_algorithms import find_most_similar_game
 
-database_games = load_pgn_database("lichess_db_standard_rated_2013-01.pgn.zst", max_games=1000)
+database_games = load_pgn_database("lichess_db_standard_rated_2013-01.pgn.zst", max_games=100000)
 
 
 app = FastAPI()
@@ -79,7 +79,7 @@ async def compare(
     with open(session_data["pgn_path"], "r", encoding="utf-8", errors="ignore") as f:
         input_game = f.read()
 
-    similar_game, score = find_most_similar_game(input_game, database_games, mode="moves")
+    similar_game, score = find_most_similar_game(input_game, database_games, mode=compare_type, method=search_method)
 
     similar_game_pgn = f"uploads/{session_id}_similar.pgn"
     with open(similar_game_pgn, "w", encoding="utf-8") as f:
