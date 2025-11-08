@@ -122,4 +122,4 @@ def find_most_similar_game(input_game: str, database_games, mode="moves", method
     elapsed = time.perf_counter() - start
     print(f"{method.upper()} search completed in {elapsed:.2f} seconds")
 
-    return best_game, best_score
+    return best_game, best_score, elapsed

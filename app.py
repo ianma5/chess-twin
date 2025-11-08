@@ -79,8 +79,8 @@ async def compare(
     with open(session_data["pgn_path"], "r", encoding="utf-8", errors="ignore") as f:
         input_game = f.read()
 
-    similar_game, score = find_most_similar_game(input_game, database_games, mode=compare_type, method=search_method, winner=winner)
-
+    similar_game, score, elapsed = find_most_similar_game(input_game, database_games, mode=compare_type, method=search_method, winner=winner)
+    elapsed = f"{elapsed:.2f}"
     similar_game_pgn = f"uploads/{session_id}_similar.pgn"
     with open(similar_game_pgn, "w", encoding="utf-8") as f:
         f.write(similar_game)
@@ -99,6 +99,7 @@ async def compare(
             "pgn_url": session_data["similar_game_pgn"],
             "pgn_content": similar_game,
             "similarity_score": score,
+            "search_time": elapsed,
             "message": "Options saved successfully!"
         }
     )
